@@ -1,23 +1,45 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import Todo from "./components/Todo/Todo";
+import View from "./components/View/View";
+import { useSelector, useDispatch } from "react-redux";
+import { todoComplete, todoDelete } from "./components/redux/todoSlice";
 
 function App() {
+
+  const todos = useSelector((state) => state.todos);
+  const dispatch = useDispatch();
+  const completeTodo = (key) => {
+    dispatch(todoComplete({ key }));
+  };
+  const deleteTodo = (key) => {
+    dispatch(todoDelete({ key }));
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <div className="NavBar">
+        <h3 className="Title">React Todo App</h3>
+      </div>
+      <div className="container">
+        <Todo />
+        <div className="Scroll content">
+          <div className="data">
+            {todos.map(({ title, completed }, key) => {
+              return (
+                <View
+                  key={key}
+                  text={title}
+                  status={completed}
+                  completeTodo={() => completeTodo(key)}
+                  deleteTodo={() => {
+                    deleteTodo(key);
+                  }}
+                />
+              );
+            })}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
